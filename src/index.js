@@ -25,18 +25,10 @@ try {
 
   logger.info('Connected to MongoDB');
 
-  app.server = app.listen(config.port, (err) => {
-    if (err) {
-      logger.error(err);
-      process.exit(1);
-    }
-
-    logger.info(
-      `URL Shortener is running in ${config.env} mode → PORT ${
-        app.server.address().port
-      }`
-    );
-  });
+  const address = await app.listen({ port: config.port });
+  logger.info(
+    `URL Shortener is running in ${config.env} mode → PORT ${address}`
+  );
 
   process.on('SIGTERM', () => {
     logger.info('SIGTERM received. Executing shutdown sequence');

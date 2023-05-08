@@ -1,26 +1,18 @@
-import winston from 'winston';
-import { WinstonTransport } from '@appsignal/nodejs';
+import pino from 'pino';
 import config from './config.js';
 
-const { combine, timestamp, json, errors } = winston.format;
-
-const logLevels = {
-  fatal: 0,
-  error: 1,
-  warn: 2,
-  info: 3,
-  debug: 4,
-  trace: 5,
-};
-
-const logger = winston.createLogger({
-  levels: logLevels,
+const logger = pino({
   level: config.logLevel,
-  format: combine(errors({ stack: true }), timestamp(), json()),
-  transports: [
-    new winston.transports.Console(),
-    new WinstonTransport({ group: 'abridge_url' }),
-  ],
+  formatters: {
+    bindings: (bindings) => {
+      return { pid: bindings.pid, host: bindings.hostname };
+    },
+
+    level: (label) => {
+      return { level: label };
+    },
+  },
+  timestamp: pino.stdTimeFunctions.isoTime,
 });
 
 export default logger;

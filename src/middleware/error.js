@@ -1,16 +1,17 @@
-import { ValidationError } from 'express-json-validator-middleware';
 import logger from '../config/logger.js';
+import { sendError } from '@appsignal/nodejs';
 
 // eslint-disable-next-line no-unused-vars
-const errorHandler = (err, req, res, next) => {
+function errorHandler(err, req, reply) {
   let statusCode = 500;
-  let message = 'Internal server error';
+  let message = 'internal server error';
 
-  if (err instanceof ValidationError) {
+  if (err.code === 'FST_ERR_VALIDATION') {
     statusCode = 400;
     message = 'validation error';
     logger.info(err);
   } else {
+    sendError(err);
     logger.error(err);
   }
 
@@ -19,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
     message,
   };
 
-  res.status(statusCode).send(response);
-};
+  reply.code(statusCode).send(response);
+}
 
 export default errorHandler;
