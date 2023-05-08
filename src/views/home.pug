@@ -1,0 +1,19 @@
+extends default
+
+block content
+  main
+    section.hero.is-medium.is-link
+      .container
+        .hero-body
+          h1.title.is-1 Abridge URL
+          p.subtitle
+            | This is a free tool to shorten URLs. Create short &amp; memorable
+            | links in seconds.
+          form.url-form
+            .field
+              .control
+                input.url-input.input.is-medium(type='url' placeholder='Paste in a link to shorten it' required='' name='url' autofocus='')
+            button.submit-button.is-warning.button.is-medium(type='submit')
+              | Shorten!
+    section.result-section.section
+      .container(style='max-width: 688px')
